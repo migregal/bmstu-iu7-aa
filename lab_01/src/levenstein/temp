@@ -1,0 +1,50 @@
+goos: linux
+goarch: amd64
+pkg: levenshtein/lev_math
+cpu: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz
+BenchmarkIterativeCachedLen1-8             	22901760	        49.73 ns/op	      32 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen2-8             	18110629	        65.18 ns/op	      48 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen3-8             	14024185	        85.21 ns/op	      64 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen4-8             	10461552	       113.7 ns/op	      96 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen5-8             	 8576572	       138.9 ns/op	      96 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen10-8            	 3322128	       356.1 ns/op	     192 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen15-8            	 1786771	       671.3 ns/op	     256 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen20-8            	  997468	      1156 ns/op	     352 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen30-8            	  498661	      2409 ns/op	     512 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen50-8            	  172508	      6908 ns/op	     832 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen100-8           	   32643	     36683 ns/op	    1792 B/op	       2 allocs/op
+BenchmarkIterativeCachedLen200-8           	    7765	    152706 ns/op	    3584 B/op	       2 allocs/op
+
+BenchmarkDamerauLevenshteinCacheLen1-8     	15923563	        73.86 ns/op	      48 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen2-8     	12473714	        96.58 ns/op	      72 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen3-8     	 9469243	       125.6 ns/op	      96 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen4-8     	 7112817	       168.3 ns/op	     144 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen5-8     	 5781900	       206.4 ns/op	     144 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen10-8    	 2132396	       562.5 ns/op	     288 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen15-8    	 1000000	      1062 ns/op	     384 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen20-8    	  613454	      1913 ns/op	     528 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen30-8    	  298503	      4017 ns/op	     768 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen50-8    	   96786	     12346 ns/op	    1248 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen100-8   	   20260	     59230 ns/op	    2688 B/op	       3 allocs/op
+BenchmarkDamerauLevenshteinCacheLen200-8   	    5233	    228972 ns/op	    5376 B/op	       3 allocs/op
+
+BenchmarkRecursiveDLLen1-8                 	90779544	        13.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen2-8                 	19147352	        61.58 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen3-8                 	 3944241	       303.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen4-8                 	  773328	      1553 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen5-8                 	  145050	      8193 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen10-8                	      28	  40084588 ns/op	     877 B/op	       0 allocs/op
+BenchmarkRecursiveDLLen15-8                	       1	215290187860 ns/op	 7738192 B/op	    1516 allocs/op
+
+BenchmarkRecursiveLen1-8                   	91217044	        13.03 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveLen2-8                   	20101994	        59.30 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveLen3-8                   	 4109704	       291.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveLen4-8                   	  789058	      1490 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveLen5-8                   	  152527	      7836 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRecursiveLen10-8                  	      31	  37794683 ns/op	     853 B/op	       0 allocs/op
+BenchmarkRecursiveLen15-8                  	       1	206560303523 ns/op	 7592704 B/op	    1325 allocs/op
+
+PASS
+ok  	lab_01/levenstein	469.877s
+21:43 gregory@migregal ~/p/b/l/s/levenstein>                                                          
+
