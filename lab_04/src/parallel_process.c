@@ -8,36 +8,30 @@
 #include <parallel_multiplication.h>
 #include <threads.h>
 
-#define THREAD_COUNT 16
+#define THREAD_COUNT 32
 
 static routine_t routines[] = {
         parallel_multiplication_by_rows,
         parallel_multiplication_by_cols,
         NULL};
 
-static inline uint8_t process(const char *filename, matrix_t *const a, matrix_t *const b, matrix_t *c) {
-    uint8_t rc = OK;
-    if ((rc = get_from_file(filename, a, b))) return rc;
+static inline uint8_t process(const char *filename, args_t *args) {
+    if (!filename || !args) return NULL_PTR_ERROR;
 
-    args_t args = {.a = a, .b = b, .res = c};
+    uint8_t rc = OK;
+    if ((rc = get_from_file(filename, args->a, args->b))) return rc;
 
     uint64_t ticks = 0;
-    if ((rc = base_multiplication(&args, &ticks))) return rc;
-    print_multiplication_results(c, ticks, 0);
+    if ((rc = base_multiplication(args, &ticks))) return rc;
+    print_multiplication_results(args->res, ticks, 0);
 
     for (size_t j = 1; j <= THREAD_COUNT; j *= 2) {
         printf("%zu threads:\n", j);
         for (size_t k = 0; routines[k]; ++k) {
-            ticks = 0;
-            if ((rc = start_threading(&args, j, routines[k], &ticks))) break;
-            print_multiplication_results(c, ticks, 0);
+            if ((rc = start_threading(args, j, routines[k], &ticks))) return rc;
+            print_multiplication_results(args->res, ticks, 0);
         }
-        if (rc) break;
     }
-
-    free_matrix(a);
-    free_matrix(b);
-    free_matrix(c);
 
     return rc;
 }
@@ -51,15 +45,12 @@ uint8_t process_file() {
     INIT_MATR_PTR(b);
     INIT_MATR_PTR(c);
 
-    uint8_t rc = OK;
-    for (size_t i = 0; files[i]; ++i) {
+    args_t args = {.a = a, .b = b, .res = c};
+    for (size_t i = 0, rc = 0; files[i]; ++i) {
         printf("\n%s\n", files[i]);
-        process(files[i], a, b, c);
+        if ((rc = process(files[i], &args))) return rc;
     }
+    free_matrixes(3, a, b, c);
 
-    free(c);
-    free(b);
-    free(a);
-
-    return rc;
+    return OK;
 }

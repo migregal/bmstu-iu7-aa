@@ -21,5 +21,4 @@ static const char *const files[] = {
         "./data/256x256.txt",
         "./data/512x512.txt",
         "./data/1024x1024.txt",
-        "./data/2048x2048.txt",
         NULL};

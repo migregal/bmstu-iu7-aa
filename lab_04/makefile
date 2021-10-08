@@ -7,7 +7,7 @@ UTESTS_DIR := ./unit_tests
 FTESTS_DIR := ./func_tests
 
 CC := gcc
-CFLAGS := -std=gnu17 -I$(INC_DIR) -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic -pg
+CFLAGS := -std=gnu17 -I$(INC_DIR) -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic -pg -D__TICKS_COUNT__
 LFLAGS := -lm -lpthread -lc
 
 INCS := $(filter-out $(INC_DIR)/main.h, $(SRCS:$(SRC_DIR)/%.c=$(INC_DIR)/%.h))
@@ -47,21 +47,3 @@ $(INC_DIR)/%.h:
 clean:
 	@$(RM) $(EXEC) $(UEXEC) ${OUT_DIR}/*
 	@rm -rf $(OUT_DIR)
-
-# CC := clang
-# OBJ = src/*.c
-# APPNAME := app.out
-# FLAGS=-lpthread -O0 -std=gnu99 -Wall -pg -lc
-# DEBUG_FLAGS=-D__DEBUG__ -g
-
-# build:
-# 	$(CC) -o $(APPNAME) $(OBJ) $(FLAGS)
-
-# debug:
-# 	$(CC) -o $(APPNAME) $(OBJ) $(FLAGS) $(DEBUG_FLAGS)
-
-# clean:
-# 	rm -rf *.exe *.out && cd src && rm -rf *.o *.hi *.exe *.out
-
-# run: build
-# 	./$(APPNAME) ${THREADS} ${TYPE}

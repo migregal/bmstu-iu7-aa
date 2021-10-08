@@ -8,6 +8,7 @@
 #include <parallel_multiplication.h>
 #include <threads.h>
 
+#define THREAD_COUNT 8
 
 uint8_t process_stdin() {
     setbuf(stdout, NULL);
@@ -29,13 +30,13 @@ uint8_t process_stdin() {
     if ((rc = base_multiplication(&args, &ticks))) return rc;
     print_multiplication_results(c, ticks, 1);
 
-    ticks = 0;
-    if ((rc = start_threading(&args, 8, parallel_multiplication_by_rows, &ticks))) return rc;
+    if ((rc = start_threading(&args, THREAD_COUNT, parallel_multiplication_by_rows, &ticks))) return rc;
     print_multiplication_results(c, ticks, 1);
 
-    free_matrix(a);
-    free_matrix(b);
-    free_matrix(c);
+    if ((rc = start_threading(&args, THREAD_COUNT, parallel_multiplication_by_cols, &ticks))) return rc;
+    print_multiplication_results(c, ticks, 1);
+
+    free_matrixes(3, a, b, c);
 
     return rc;
 }
