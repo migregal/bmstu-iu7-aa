@@ -1,17 +1,17 @@
 package md5conveyor
 
 import (
-	"crypto/md5"
 	"sync"
+	"time"
 )
 
-func (c *Conveyor) Md5All(root string) (map[string][md5.Size]byte, error) {
+func (c *Conveyor) Md5All(root string) ([]Output, error) {
 	done := make(chan struct{})
 	defer close(done)
 
 	paths, errc := walkFiles(done, root)
 
-	out := make(chan result)
+	out := make(chan digesterOutput)
 	var wg sync.WaitGroup
 	wg.Add(c.numDigesters)
 	for i := 0; i < c.numDigesters; i++ {
@@ -25,12 +25,19 @@ func (c *Conveyor) Md5All(root string) (map[string][md5.Size]byte, error) {
 		close(out)
 	}()
 
-	m := make(map[string][md5.Size]byte)
+	m := make([]Output, 0)
 	for r := range out {
 		if r.err != nil {
 			return nil, r.err
 		}
-		m[r.path] = r.sum
+		m = append(m, Output{
+			r.path,
+			r.sum,
+			r.filewalker,
+			r.queue,
+			r.processTime,
+			time.Since(r.md5Start),
+		})
 	}
 
 	if err := <-errc; err != nil {

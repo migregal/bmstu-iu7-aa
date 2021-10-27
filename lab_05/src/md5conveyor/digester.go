@@ -3,13 +3,25 @@ package md5conveyor
 import (
 	"crypto/md5"
 	"io/ioutil"
+	"time"
 )
 
-func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
+func digester(done <-chan struct{}, paths <-chan filewalkerOutput, c chan<- digesterOutput) {
 	for path := range paths {
-		data, err := ioutil.ReadFile(path)
+		start := time.Now()
+		data, err := ioutil.ReadFile(path.path)
 		select {
-		case c <- result{path, md5.Sum(data), err}:
+		case c <- digesterOutput{
+			path.path,
+			md5.Sum(data),
+			err,
+
+			path.processTime,
+			start.Sub(path.queueStart),
+			time.Since(start),
+			time.Now(),
+		}:
+			start = time.Now()
 		case <-done:
 			return
 		}
