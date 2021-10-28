@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-type filewalkerOutput struct {
+type fwOutput struct {
 	path string
 
 	processTime time.Duration
 	queueStart  time.Time
 }
 
-type digesterOutput struct {
+type dOutput struct {
 	path string
 	sum  [md5.Size]byte
 	err  error

@@ -7,12 +7,11 @@ import (
 	"time"
 )
 
-func walkFiles(done <-chan struct{}, root string) (<-chan filewalkerOutput, <-chan error) {
-	paths := make(chan filewalkerOutput)
+func walkFiles(done <-chan struct{}, root string) (<-chan fwOutput, <-chan error) {
+	paths := make(chan fwOutput)
 	errc := make(chan error, 1)
 	go func() {
 		defer close(paths)
-
 		start := time.Now()
 		errc <- filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -22,7 +21,7 @@ func walkFiles(done <-chan struct{}, root string) (<-chan filewalkerOutput, <-ch
 				return nil
 			}
 			select {
-			case paths <- filewalkerOutput{path, time.Since(start), time.Now()}:
+			case paths <- fwOutput{path, time.Since(start), time.Now()}:
 				start = time.Now()
 			case <-done:
 				return errors.New("walk canceled")

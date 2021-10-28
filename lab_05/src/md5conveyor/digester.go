@@ -6,16 +6,15 @@ import (
 	"time"
 )
 
-func digester(done <-chan struct{}, paths <-chan filewalkerOutput, c chan<- digesterOutput) {
+func digester(done <-chan struct{}, paths <-chan fwOutput, c chan<- dOutput) {
 	for path := range paths {
 		start := time.Now()
 		data, err := ioutil.ReadFile(path.path)
 		select {
-		case c <- digesterOutput{
+		case c <- dOutput{
 			path.path,
 			md5.Sum(data),
 			err,
-
 			path.processTime,
 			start.Sub(path.queueStart),
 			time.Since(start),

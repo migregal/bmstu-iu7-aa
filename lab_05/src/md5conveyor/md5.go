@@ -11,7 +11,7 @@ func (c *Conveyor) Md5All(root string) ([]Output, error) {
 
 	paths, errc := walkFiles(done, root)
 
-	out := make(chan digesterOutput)
+	out := make(chan dOutput)
 	var wg sync.WaitGroup
 	wg.Add(c.numDigesters)
 	for i := 0; i < c.numDigesters; i++ {
