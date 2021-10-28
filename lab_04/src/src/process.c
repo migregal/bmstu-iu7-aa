@@ -8,7 +8,7 @@
 #include <parallel_multiplication.h>
 #include <threads.h>
 
-#define THREAD_COUNT 8
+#define THREAD_COUNT 1
 
 uint8_t process_stdin() {
     setbuf(stdout, NULL);
