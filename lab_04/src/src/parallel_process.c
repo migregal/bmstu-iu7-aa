@@ -8,7 +8,7 @@
 #include <parallel_multiplication.h>
 #include <threads.h>
 
-#define THREAD_COUNT 32
+#define THREAD_COUNT 2
 
 static routine_t routines[] = {
         parallel_multiplication_by_rows,
