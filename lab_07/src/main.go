@@ -9,12 +9,12 @@ import (
 	"lab_07/dict"
 )
 
-func printRes(method string, res dict.Dict) {
+func printRes(method string, res dict.Dict, count int) {
 	fmt.Printf("%v ", aurora.Yellow(method+":"))
 	if res["username"] == nil {
 		fmt.Printf("%v\n\n", aurora.Red("There is no dict such key"))
 	} else {
-		fmt.Printf("%v\n", aurora.Green("Dict with specified key is found"))
+		fmt.Printf("%v [ %d ]\n", aurora.Green("Dict with specified key is found"), count)
 		fmt.Println(res.ToString())
 	}
 }
@@ -33,12 +33,15 @@ func main() {
 	fmt.Scanln(&gt)
 	fmt.Println()
 
-	printRes("Brute algorythm", darr.Brute(gt))
+	c, v := darr.Brute(gt)
+	printRes("Brute algorythm", v, c)
 
 	sort.Slice(darr, func(i, j int) bool {
 		return darr[i]["username"].(string) < darr[j]["username"].(string)
 	})
-	printRes("Binary search algorythm", darr.Binary(gt))
+	c, v = darr.Binary(gt)
+	printRes("Binary search algorythm", v, c)
 
-	printRes("Freq Analysis algorythm", farr.Combined(gt))
+	c, v = farr.Combined(gt)
+	printRes("Freq Analysis algorythm", v, c)
 }
