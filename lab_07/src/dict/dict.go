@@ -75,11 +75,11 @@ func (darr DictArray) Pick(l string) string {
 }
 
 // Brute used to find value using bruteforce method.
-func (darr DictArray) Brute(gt string) (int, Dict) {
+func (darr DictArray) Brute(uname string) (int, Dict) {
 	var r Dict
 
 	for i, d := range darr {
-		if d["username"] == gt {
+		if d["username"] == uname {
 			return i + 1, d
 		}
 	}
@@ -88,10 +88,10 @@ func (darr DictArray) Brute(gt string) (int, Dict) {
 }
 
 // Binary used to find value using binary search method.
-func (darr DictArray) Binary(gt string) (int, Dict) {
+func (darr DictArray) Binary(uname string) (int, Dict) {
 	var binary func(DictArray, string, int) (int, Dict)
 
-	binary = func(arr DictArray, gt string, idx int) (int, Dict) {
+	binary = func(arr DictArray, uname string, idx int) (int, Dict) {
 		var (
 			l   int = len(arr)
 			mid int = l / 2
@@ -101,16 +101,16 @@ func (darr DictArray) Binary(gt string) (int, Dict) {
 		switch {
 		case l == 0:
 			return 0, r
-		case arr[mid]["username"].(string) > gt:
-			return binary(arr[:mid], gt, idx+1)
-		case arr[mid]["username"].(string) < gt:
-			return binary(arr[mid+1:], gt, idx+2)
+		case arr[mid]["username"].(string) > uname:
+			return binary(arr[:mid], uname, idx+1)
+		case arr[mid]["username"].(string) < uname:
+			return binary(arr[mid+1:], uname, idx+2)
 		default:
 			return idx + 2, arr[mid]
 		}
 	}
 
-	return binary(darr, gt, 0)
+	return binary(darr, uname, 0)
 }
 
 // FreqAnalysis used to analyse frequency of given DictArray.
