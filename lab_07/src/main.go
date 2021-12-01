@@ -28,20 +28,20 @@ func main() {
 	fmt.Printf("%v\n\n", aurora.Yellow("Dictionary data:"))
 	darr.Print()
 
-	var gt string
+	var uname string
 	fmt.Printf("%v ", aurora.Green("Key to find:"))
-	fmt.Scanln(&gt)
+	fmt.Scanln(&uname)
 	fmt.Println()
 
-	c, v := darr.Brute(gt)
+	c, v := darr.Brute(uname)
 	printRes("Brute algorythm", v, c)
 
 	sort.Slice(darr, func(i, j int) bool {
 		return darr[i]["username"].(string) < darr[j]["username"].(string)
 	})
-	c, v = darr.Binary(gt)
+	c, v = darr.Binary(uname)
 	printRes("Binary search algorythm", v, c)
 
-	c, v = farr.Combined(gt)
+	c, v = farr.Combined(uname)
 	printRes("Freq Analysis algorythm", v, c)
 }
