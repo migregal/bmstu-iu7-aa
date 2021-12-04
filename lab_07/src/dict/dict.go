@@ -11,7 +11,6 @@ import (
 	"github.com/brianvoe/gofakeit"
 )
 
-// CreateArray used to create DictArray with given size.
 func CreateArray(n int) DictArray {
 	var (
 		darr DictArray
@@ -39,7 +38,6 @@ func CreateArray(n int) DictArray {
 	return darr
 }
 
-// IsDup used to check whether Dict presents in given DictArray.
 func (d Dict) IsDup(darr DictArray) bool {
 	for _, v := range darr {
 		if reflect.DeepEqual(d, v) {
@@ -49,19 +47,16 @@ func (d Dict) IsDup(darr DictArray) bool {
 	return false
 }
 
-// Print used to print single Dict.
 func (d Dict) ToString() string {
 	return fmt.Sprintf("Username: %v\nPassword: %v\n", d["username"], d["password"])
 }
 
-// Print used to print single DictArray.
 func (darr DictArray) Print() {
 	for _, d := range darr {
 		fmt.Println(d.ToString())
 	}
 }
 
-// Pick used to get username with first letter.
 func (darr DictArray) Pick(l string) string {
 	for _, d := range darr {
 		if d["username"].(string)[:1] == l {
@@ -74,7 +69,6 @@ func (darr DictArray) Pick(l string) string {
 	return darr[i]["username"].(string)
 }
 
-// Brute used to find value using bruteforce method.
 func (darr DictArray) Brute(uname string) (int, Dict) {
 	var r Dict
 
@@ -87,7 +81,6 @@ func (darr DictArray) Brute(uname string) (int, Dict) {
 	return len(darr), r
 }
 
-// Binary used to find value using binary search method.
 func (darr DictArray) Binary(uname string) (int, Dict) {
 	var binary func(DictArray, string, int) (int, Dict)
 
@@ -100,7 +93,7 @@ func (darr DictArray) Binary(uname string) (int, Dict) {
 
 		switch {
 		case l == 0:
-			return 0, r
+			return idx, r
 		case arr[mid]["username"].(string) > uname:
 			return binary(arr[:mid], uname, idx+1)
 		case arr[mid]["username"].(string) < uname:
@@ -113,51 +106,43 @@ func (darr DictArray) Binary(uname string) (int, Dict) {
 	return binary(darr, uname, 0)
 }
 
-// FreqAnalysis used to analyse frequency of given DictArray.
 func (darr DictArray) FreqAnalysis() FreqArray {
-	var (
-		alphabet string    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-		farr     FreqArray = make(FreqArray, len(alphabet))
-	)
-
-	for i, v := range alphabet {
-		a := Freq{
-			l:    string(v),
-			cnt:  0,
-			darr: make(DictArray, 0),
-		}
-		farr[i] = a
-	}
+	farr := make(FreqArray, 0)
 
 	for _, v := range darr {
-		l := v["username"].(string)[:1]
+		found := false
 		for i := range farr {
-			if farr[i].l == l {
+			if v["username"].(string)[:1] == farr[i].l {
+				farr[i].darr = append(farr[i].darr, v)
 				farr[i].cnt++
+				found = true
 			}
 		}
+
+		if !found {
+			a := Freq{
+				l:    v["username"].(string)[:1],
+				cnt:  1,
+				darr: make(DictArray, 0),
+			}
+			a.darr = append(a.darr, v)
+			farr = append(farr, a)
+		}
+	}
+
+	for i := range farr {
+		sort.Slice(farr[i].darr, func(l, m int) bool {
+			return farr[i].darr[l]["username"].(string) < farr[i].darr[m]["username"].(string)
+		})
 	}
 
 	sort.Slice(farr, func(i, j int) bool {
 		return farr[i].cnt > farr[j].cnt
 	})
 
-	for i := range farr {
-		for j := range darr {
-			if darr[j]["username"].(string)[:1] == farr[i].l {
-				farr[i].darr = append(farr[i].darr, darr[j])
-			}
-		}
-
-		sort.Slice(farr[i].darr, func(l, m int) bool {
-			return farr[i].darr[l]["username"].(string) < farr[i].darr[m]["username"].(string)
-		})
-	}
-
 	return farr
 }
 
-// Combined used to find value using binary search and frequency analysis method.
 func (farr FreqArray) Combined(w string) (int, Dict) {
 	var (
 		l   string = w[:1]
@@ -165,11 +150,11 @@ func (farr FreqArray) Combined(w string) (int, Dict) {
 		cnt int = len(farr)
 	)
 
-	for _, d := range farr {
+	for i, d := range farr {
 		if string(d.l) == l {
 			var t int
 			t, r = d.darr.Binary(w)
-			cnt += t + 1
+			cnt = i + 1 + t
 		}
 	}
 
