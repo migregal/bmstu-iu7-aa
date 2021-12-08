@@ -1,0 +1,184 @@
+\chapter{Экспериментальная часть}
+
+В данном разделе будет проведено функциональное тестирование разработанного программного обеспечения. Так же будет произведено измерение временных характеристик каждого из реализованных алгоритмов. 
+
+Для проведения подобных экспериментов на языке программирования \texttt{Golang} \cite{golang}, используется специальный пакет \texttt{testing} \cite{gotest}. Данный пакет предоставляет инструменты для измерения процессорного времени и объема памяти, использованных конкретным алгоритмом в ходе проведения 
+эксперимента.
+
+\section{Технические характеристики}
+
+Технические характеристики устройства, на котором выполнялось исследование:
+
+\begin{itemize}
+	\item Процессор: Intel Core™ i5-8250U \cite{i5} CPU @ 1.60GHz.
+	\item Память: 32 GiB.
+	\item Операционная система: Ubuntu \cite{ubuntu} Linux \cite{linux} 20.04 64-bit.
+
+\end{itemize}
+
+Исследование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения рабочего стола, окружением рабочего стола, а также непосредственно системой тестирования.
+
+\section{Тестирование}
+
+В данном разделе будет приведена таблица с тестами (таблица \ref{table:ref1}).
+
+\begin{table}[h!]
+	\begin{center}
+	\caption{Таблица тестов}
+	\label{table:ref1}
+		\begin{tabular}{c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}}
+			\hline
+			Первая матрица & Вторая матрица & Ожидаемый результат \\ \hline
+			\vspace{4mm}
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			4
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}			
+			$\begin{pmatrix}
+			2 \\
+			1 
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			2 & 4\\
+			1 & 2
+			\end{pmatrix}$\\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & 2 & 2\\
+			1 & 2 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2\\
+			1 & 2\\
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			5 & 10\\
+			5 & 10
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & -2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			-1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			0 & 4 & 6\\
+			4 & 12 & 18\\
+			4 & 12 & 18
+			\end{pmatrix}$\\
+		\end{tabular}
+	\end{center}
+\end{table}
+\newpage
+При проведении функционального тестирования, полученные результаты работы программы совпали с ожидаемыми. Таким образом, функциональное тестирование пройдено успешно.
+
+\section{Временные характеристики}
+
+Для сравнения возьмем квадратные матрицы размерностью [100, 200, 300, \dots, 800]. 
+
+Результаты замеров по результатам экспериментов приведены в Таблице \ref{tbl:time_even}.
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\caption{Замер времени для матриц, размером от 100 до 800 элементов}
+		\label{tbl:time_even}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& \multicolumn{3}{c|}{\bfseries Время, нс} \\ \cline{1-4}
+			\bfseries Размерность матрицы, эл. & \bfseries Простой & \bfseries Виноград & \bfseries Оптимизированный Виноград
+			\csvreader{inc/csv/time_even.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={Размер массива, эл},
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=simple,col sep=comma] {inc/csv/time_even.csv};
+			\addplot table[x=len,y=winograd,col sep=comma] {inc/csv/time_even.csv};
+			\addplot table[x=len,y=winograd_imp,col sep=comma] {inc/csv/time_even.csv};
+			\legend{Простой, Виноград, Виноград с оптимизациями}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Временные характеристики на четных размерах матриц}
+	\label{plt:time_even_cmp}
+\end{figure}
+
+Отдельно сравним временные характеристики при нечетных размерностях матриц [101, 201, 301, \dots, 801].
+
+Результаты замеров по результатам экспериментов приведены в Таблице \ref{tbl:time_odd}.
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\caption{Замер времени для матриц, размером от 101 до 801 элементов}
+		\label{tbl:time_odd}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& \multicolumn{3}{c|}{\bfseries Время, нс} \\ \cline{1-4}
+			\bfseries Размерность матрицы, эл. & \bfseries Простой & \bfseries Виноград & \bfseries Оптимизированный Виноград
+			\csvreader{inc/csv/time_odd.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={Размер массива, эл},
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=simple,col sep=comma] {inc/csv/time_odd.csv};
+			\addplot table[x=len,y=winograd,col sep=comma] {inc/csv/time_odd.csv};
+			\addplot table[x=len,y=winograd_imp,col sep=comma] {inc/csv/time_odd.csv};
+			\legend{Простой, Виноград, Виноград с оптимизациями}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Временные характеристики на нечетных размерах матриц}
+	\label{plt:time_odd_cmp}
+\end{figure}
+
+\newpage
+\section{Вывод}
+В данном разделе было произведено сравнение количества затраченного вре­мени вышеизложенных алгоритмов.
+Наименее затратным по времени оказался оптимизированный алгоритм Винограда. Но при этом ему дополнительно требуется $n+m$ памяти под результат (т.е. $n+m$ прибавляется к тому количеству памяти, которое выделяется под результат в реализации стандарного алгоритма умножения матриц - $n \cdot m$).
+
+Время работы реализации алгоритма Винограда незначительно меньше времени работы реализации простого алгоритма умножения, однако при размере $800 × 800$ время вычислений реализации алгоритма Винограда на 0.3 секунды меньше, нежели у реализации простого алгоритма (что составляет в данном случае порядка $10\%$).
+
+Такой результат совпадает с теоретически полученными оценками трудоемкости алгоритмов 

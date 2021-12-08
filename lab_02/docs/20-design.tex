@@ -1,0 +1,162 @@
+\chapter{Конструкторская часть}
+
+В данном разделе будут рассмотрены схемы алгоритмов умножения матриц и модель вычислений.
+
+\section{Схемы}
+На рисунке \ref{img:std_mul} представлена схема стандартного алгоритма умножения матриц.
+
+\imgw{std_mul}{ht!}{0.8\textwidth}{Схема стандартного алгоритма умножения матриц}
+
+\clearpage
+
+На рисунках \ref{img:win_mul} -- \ref{img:win_mul_2} представлена схема алгоритма Винограда умножения матриц.
+
+\imgw{win_mul}{ht!}{0.8\textwidth}{Схема алгоритма Винограда умножения матриц. Часть 1}
+
+\imgw{win_mul_2}{ht!}{0.8\textwidth}{Схема алгоритма Винограда умножения матриц. Часть 2}
+
+\clearpage
+\section{Модель вычислений}
+
+Для последующего вычисления трудоемкости введём модель вычислений:
+
+\begin{itemize}
+	\item операции из списка (\ref{for:opers}) имеют трудоемкость 1;
+	\begin{equation}
+	\label{for:opers}
+	+, -, =, +=, -=, ==, !=, <, >, <=, >=, >>, <<, [], ++, {-}-
+	\end{equation}
+	\item операции из списка (\ref{for:opers}) имеют трудоемкость 2;
+	\begin{equation}
+	\label{for:opers2}
+	*,  /, \%, /=, *=
+	\end{equation}
+	\item трудоемкость оператора выбора if условие then A else B рассчитывается, как (\ref{for:if});
+	\begin{equation}
+	\label{for:if}
+	f_{if} = f_{\text{условия}} +
+	\begin{cases}
+	f_A, & \text{если условие выполняется,}\\
+	f_B, & \text{иначе.}
+	\end{cases}
+	\end{equation}
+	\item трудоемкость цикла рассчитывается, как (\ref{for:for}).
+	\begin{equation}
+	\label{for:for}
+	f_{for} = f_{\text{инициализации}} + f_{\text{сравнения}} + N(f_{\text{тела}} + f_{\text{инкремента}} + f_{\text{сравнения}})
+	\end{equation}
+	%\item трудоемкость вызова функции равна 0.
+\end{itemize}
+
+\section{Трудоёмкость алгоритмов}
+
+\subsection{Стандартный алгоритм умножения матриц}
+
+Трудоёмкость стандартного алгоритма умножения матриц состоит из:
+\begin{itemize}
+	\item внешнего цикла по $i \in [1..n]$, трудоёмкость которого: 
+	
+	$f = 2 + n \cdot (2 + f_{body})$;
+	\item цикла по $j \in [1..m]$, трудоёмкость которого: $f = 2 + m \cdot (2 + f_{body})$;
+	\item скалярного умножения двух векторов - цикл по $k \in [1..q]$, трудоёмкость которого: $f = 2 + 14q$;
+\end{itemize}
+
+Трудоёмкость стандартного алгоритма равна трудоёмкости внешнего цикла, можно вычислить ее, подставив циклы тела (\ref{for:base}):
+\begin{equation}
+	\label{for:base}
+	f_{base} = 2 + n \cdot (4 + m \cdot (4 + 14q)) = 2 + 4 \cdot n + 4 \cdot nm + 14 \cdot nmq \approx 14 \cdot nmq
+\end{equation}
+
+\subsection{Алгоритм Винограда}
+
+Трудоёмкость алгоритма Винограда состоит из:
+\begin{enumerate}
+	\item  формирования массива сумм произведений пар соседних элементов строк матрицы A:
+	\begin{equation}
+	\begin{array}{c}
+	f_1 = 2 + n  \cdot(2 + 4 + q/2  \cdot (4 + 1 + 6 + 3  \cdot 2 + 2)) =  \\
+		19/2 \cdot nm + 6 \cdot n + 2 ;
+	\end{array}
+	\end{equation}
+	
+	\item  формирования массива сумм произведений пар соседних элементов строк матрицы B:
+	\begin{equation}
+	f_2 = 19/2 \cdot mq + 6 \cdot m + 2;
+	\end{equation}
+	
+	\item цикла заполнения ячеек матрицы C для чётных размеров:
+	\begin{equation}
+	\begin{array}{c}
+	f_3 = 2 + n \cdot (2 + 2 + m \cdot (2 + 7 + 4 + q/2 \cdot (4 + 1 + 12 + 5 + 5 \cdot 2))) = \\
+		32/2 \cdot nqm + 13 \cdot nm + 4 \cdot n + 2 ;
+	\end{array}
+	\end{equation}
+	
+	\item цикла для дополнения умножения суммой последних нечётных строки и столбца, если общий размер нечётный (\ref{for:last}):
+	\begin{equation}
+	\label{for:last}
+	f_4 =  3 + \begin{cases}
+	0, & \text{чётная,}\\
+	2 +4 \cdot n + 13 \cdot nm), & \text{иначе.}
+	\end{cases}
+	\end{equation}
+\end{enumerate}
+
+Итого, для худшего (нечётный размер матриц) и лучшего (чётный размер матриц) случаев:
+\begin{equation}
+\label{for:bad}
+f_{winograd} = 16 \cdot nqm.
+\end{equation}
+
+\subsection{Оптимизированный алгоритм Винограда}
+
+Из рисунков \ref{img:win_mul} -- \ref{img:win_mul_2} можно заметить, что для алгоритма Винограда худшим случаем являются матрицы с нечётным общим размером, а лучшим - с чётным, так как отпадает необходимость в последнем цикле.
+Данный алгоритм можно оптимизировать:
+\begin{enumerate}
+	\item заменив выражения вида \texttt{a = a + ...} на \texttt{a += ...};
+	\item введя промежуточный буфер для подсчета промежуточных значений;
+	\item сделав в циклах по k шаг 2, избавившись тем самым от двух операций умножения на каждую итерацию.
+\end{enumerate}
+
+Трудоёмкость оптимизированного алгоритма Винограда состоит из:
+\begin{enumerate}
+	\item  формирования массива сумм произведений пар соседних элементов строк матрицы A:
+	\begin{equation}
+	\begin{array}{c}
+	f_1 = 11/2 \cdot nq + 4 \cdot n + 2 ;
+	\end{array}
+	\end{equation}
+	
+	\item  формирования массива сумм произведений пар соседних элементов строк матрицы B:
+	\begin{equation}
+	f_2 = 11/2 \cdot mq + 4 \cdot m + 2;
+	\end{equation}
+	
+	\item цикла заполнения ячеек матрицы C для чётных размеров:
+	\begin{equation}
+	\begin{array}{c}
+	f_3 = 2 + n \cdot (2 + 2 + m \cdot (2 + 6 + 2 + q/2 \cdot (2 + 1 + 10 + 4 + 1 \cdot 2))) = \\
+		17/2 \cdot nqm + 13 \cdot nm + 4 \cdot n + 2 ;
+	\end{array}
+	\end{equation}
+	
+	\item цикла для дополнения умножения суммой последних нечётных строки и столбца, если общий размер нечётный (\ref{for:last_2}):
+	\begin{equation}
+	\label{for:last_2}
+	f_4 =  2 + \begin{cases}
+	0, & \text{чётная,}\\
+	2 +4 \cdot n + 13 \cdot nm), & \text{иначе.}
+	\end{cases}
+	\end{equation}
+\end{enumerate}
+
+Итого, для худшего (нечётный размер матриц) и лучшего (чётный размер матриц) случаев:
+\begin{equation}
+\label{for:bad_2}
+f_{winograd} = 17/2 \cdot nqm  \approx 8.5  \cdot nqm .
+\end{equation}
+
+\section{Вывод}
+
+В данном разделе были рассмотрены схемы (рис. \ref{img:std_mul} -- \ref{img:win_mul_2}) алгоритмов умножения матриц.
+Оценены их трудоемкости в лучшем и худшем случаях.
