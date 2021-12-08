@@ -1,0 +1,142 @@
+\chapter{Экспериментальная часть}
+
+В данном разделе будет проведено функциональное тестирование разработанного программного обеспечения. Так же будет произведено измерение временных характеристик и характеристик по памяти каждого из реализованных алгоритмов. 
+
+Для проведения подобных экспериментов на языке программирования \texttt{Golang} \cite{golang}, используется специальный пакет \texttt{testing} \cite{gotest}. Данный пакет предоставляет инструменты для измерения процессорного времени и объема памяти, использованных конкретным алгоритмом в ходе проведения 
+эксперимента.
+
+\section{Тестирование}
+
+В таблице \ref{tabular:functional_test} приведены функциональные тесты для алгоритмов сортировки.
+
+\begin{table}[h]
+    \small
+	\begin{center}
+		\caption{\label{tabular:functional_test} Функциональные тесты}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			\bfseries Тип случая & \bfseries Исходный массив & \bfseries Пузырек & \bfseries Вставками & \bfseries Выбором
+			\csvreader{inc/csv/functional_test.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+При проведении функционального тестирования, полученные результаты работы программы совпали с ожидаемыми. Таким образом, функциональное тестирование пройдено успешно.
+
+\section{Технические характеристики}
+
+Технические характеристики устройства, на котором выполнялось исследование:
+
+\begin{itemize}
+	\item процессор: Intel Core™ i5-8250U \cite{i5} CPU @ 1.60GHz;
+	\item память: 32 GiB;
+	\item операционная система: Ubuntu \cite{ubuntu} Linux \cite{linux} 20.04 64-bit;
+
+\end{itemize}
+
+Исследование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения рабочего стола, окружением рабочего стола, а также непосредственно системой тестирования.
+
+\section{Временные характеристики}
+
+Для сравнения возьмем массивы размерностью [10, 100, 200, 300,\dots, 500, 1000]. 
+Результаты замеров по результатам экспериментов приведены в Таблице \ref{tbl:time}.
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\caption{Замер времени для массивов, размером от 10 до 1000 элементов}
+		\label{tbl:time}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& \multicolumn{3}{c|}{\bfseries Время, нс} \\ \cline{1-4}
+			\bfseries Длина (символ) & \bfseries Пузырьком & \bfseries Вставками & \bfseries Выбором
+			\csvreader{inc/csv/time_sorted.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+Отдельно сравним итеративные алгоритмы поиска расстояний Левенштейна и Дамерау--Левенштейна. Сравнение будет производится на основе данных, представленных в Таблице \ref{tbl:time}. Результат можно увидеть на Рисунке \ref{plt:time_sorted_cmp}.
+
+\clearpage
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={Длина массива, эл},
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=Bubble,col sep=comma] {inc/csv/time_sorted.csv};
+			\addplot table[x=len,y=Insertion,col sep=comma] {inc/csv/time_sorted.csv};
+			\addplot table[x=len,y=Selection,col sep=comma] {inc/csv/time_sorted.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Сравнение времени работы алгоритмов на отсортированных входных данных.}
+	\label{plt:time_sorted_cmp}
+\end{figure}
+
+В лучшем случае, как и ожидалось, сортировка вставками является наиболее эффективной по времени. При этом, сортировка выбором является наименее эффективной, так так использует дополнительные операции, по сравнению с пузырьковой сортировкой.
+
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={Длина массива, эл},
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=Bubble,col sep=comma] {inc/csv/time_reversed.csv};
+			\addplot table[x=len,y=Insertion,col sep=comma] {inc/csv/time_reversed.csv};
+			\addplot table[x=len,y=Selection,col sep=comma] {inc/csv/time_reversed.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Сравнение времени работы алгоритмов на отсортированных по убыванию входных данных.}
+	\label{plt:time_reversed_cmp}
+\end{figure}
+
+В худшем случае сортировка вставками остается наиболее эффективной по времени из рассмотренных. При этом, сортировка пузырьком показывает результат близкий к сортировке выбором.
+
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={Длина массива, эл},
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=Bubble,col sep=comma] {inc/csv/time_random.csv};
+			\addplot table[x=len,y=Insertion,col sep=comma] {inc/csv/time_random.csv};
+			\addplot table[x=len,y=Selection,col sep=comma] {inc/csv/time_random.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Сравнение времени работы алгоритмов на случайно упорядоченных входных данных.}
+	\label{plt:time_random_cmp}
+\end{figure}
+
+В общем случае сортировка вставками остается наиболее эффективной по времени из рассмотренных. При этом, сортировка пузырьком оказывается менее эффективной, так как в данном алгоритме элементы массива рассматриваются попарно и на каждой итерации происходит вплоть до $N$ обменов элементов.
+
+Из данных, приведенных в  Таблице \ref{tbl:time}, видно, что сортировка вставками является наиболее эффективной по времени из рассмотренных в любом из трех случаев. При этом, сортировка пузырьком является практически эквивалентной сортировке выбором при входных данных, отсортированных в обратном порядке, но оказывается наиболее затратной при случайном заполнении элементов в массиве.
+
+
+\section{Вывод}
+
+В данном разделе было произведено сравнение количества затраченного времени вышеизложенных алгоритмов.
+
+Исходя из полученных результатов, можно сделать вывод, что сортировка пузырьком всегда оказывается самой времязатраной, сортировка вставками выигрывает по времени во всех трех случаях из трех представленных, а сортировка выбором оказывается эффективнее пузырьковой сортировки лишь на случайных данных.
