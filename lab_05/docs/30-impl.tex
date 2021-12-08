@@ -1,0 +1,80 @@
+\chapter{Технологическая часть}
+
+\section{Выбор средств реализации}
+
+В качестве языка программирования для реализации данной лабораторной работы был выбран язык Golang \cite{golang}. Данный выбор обусловлен тем, что я имею некоторый опыт разработки на нем, а так же наличием у языка встроенных высокоточных средств тестирования и анализа разработанного ПО.
+
+\section{Требования к программному обеспечению}
+
+Входные данные: путь до файла или директории в файловой системе.
+
+Выходные данные: упорядоченный по имени файла набор строк, содеращих имя файла и соответствующий кеш md5.
+
+\section{Сведения о модулях программы}
+
+Данная программа разбита на модули:
+\begin{itemize}
+    \item \texttt{main.c} - файл, содержащий точку входа в программу;
+    \item \texttt{types.go} - файл, содержащий определение пользовательских типов даных;
+	\item \texttt{conveyer.go} - файл, содержащий определение структуры конвейера;
+    \item \texttt{filewalker.go} - файл, содержащий реализацию первой ленты конвейера;
+    \item \texttt{digester.go} - файл, содержащий реализацию второй ленты конвейера;
+    \item \texttt{md5.go} - файл, содержащий реализацию третьей ленты конвейера;
+\end{itemize}
+
+
+На листингах \ref{lst:main} -- \ref{lst:md5} представлен код программы.
+
+\listingfile{main.go}{main}{Go}{Основной файл программы main}{linerange={10-19}}
+
+\listingfile{types.go}{types}{Go}{Определение пользовательских типов данных}{linerange={8-34}}
+
+\clearpage
+
+\listingfile{conveyer.go}{conveyer}{Go}{Определение структуры конвейера}{linerange={3-9}}
+
+\listingfile{filewalker.go}{filewalker}{Go}{Лента обхода файловой системы}{linerange={10-34}}
+
+\listingfile{digester.go}{digester}{Go}{Лента вычисления хеш-суммы конкретного файла}{linerange={9-29}}
+
+\listingfile{md5.go}{md5}{Go}{Запуск конвейера}{linerange={8-47}}
+
+\clearpage
+
+\section{Тестирование}
+
+В рамках данной лабораторной работы будет проведено функциональное тестирование реализованного программного обеспечения.
+
+Выделим основные классы эквивалентности для тестирования:
+\begin{itemize}
+    \item входными данными является путь до файла;
+    \item входными данными является путь до директории.
+\end{itemize}
+
+В Таблице \ref{tbl:tests} приведены тесты для указанных классов эквивалентности.
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\caption{Таблица тестов}
+		\label{tbl:tests}
+		\begin{tabular}{|c|p{50mm}|p{70mm}|}
+			\hline
+			\bfseries Путь & \bfseries Файлы & \bfseries Хеш-сумма \\ \hline
+			\texttt{./main.go} & \texttt{./main.go} & \bfseries \texttt{8bbb6d9acffca1a5f9f51e2152b1f535} \\ \hline
+			\texttt{./src} & \texttt{go.mod} \newline \texttt{lab\_05} \newline \texttt{main.go} \newline \texttt{md5conveyor/conveyer.go} \newline \texttt{md5conveyor/digester.go} \newline \texttt{md5conveyor/filewalker.go} \newline \texttt{md5conveyor/md5.go} \newline \texttt{md5conveyor/types.go} \newline \texttt{process.go} & 
+			\texttt{feca2534ea9898769375d13a1e00c287} \newline \texttt{2eb11a3416254f86320142b58e1896ff} \newline \texttt{8bbb6d9acffca1a5f9f51e2152b1f535} \newline \texttt{2224737183186219e0a8564a5b1724cb} \newline \texttt{3b85b3efbe4291c2e79efee842ce6439} \newline \texttt{d9a373972260d3883eb7159ad8a77532} \newline \texttt{5f3bf37395cb7e3a236ba096b0e316d6} \newline \texttt{2715f98eda4714f34aee1646f5514f63} \newline \texttt{58300a8b36b9e1d01d54d842ed219418}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+При проведении функционального тестирования, полученные результаты работы программы совпали с ожидаемыми. Таким образом, функциональное тестирование пройдено успешно.
+
+\section{Вывод}
+
+В данном разделе был реализован вышеописанный алголритм. 
+
+Было разработано программное обеспечение, удовлетворяющее предъявляемым требованиям. Так же были представлены соответствующие листинги \ref{lst:main} -- \ref{lst:md5} с кодом программы.
+
+Было прроведено функциональное тестирование разработанного программного обеспечения. Так же были приведены классы эквивалентности для тестирования.
