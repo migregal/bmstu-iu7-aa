@@ -8,4 +8,4 @@ As you are here give me a star)
 
 ## Thanks
 
-To achieve [GOST 7.32](https://docs.cntd.ru/document/1200157208) [that repo](https://github.com/Orianti/bmstu-latex-class) was used. So leave a star for it's [author](https://github.com/Orianti), he did a great job for us!
+ [That repo](https://github.com/Orianti/bmstu-latex-class) was used to achieve [GOST 7.32](https://docs.cntd.ru/document/1200157208). So leave a star for it's [author](https://github.com/Orianti), he did a great job for us!
